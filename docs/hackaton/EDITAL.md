@@ -1,0 +1,163 @@
+### Edital do Hackathon
+
+**Desenvolvimento de Sistema Inteligente para Geração de Materiais Didáticos de Cultura Digital Alinhados à BNCC**  
+Coordenação do curso TADS — IFPI — Campus Piripiri  
+**Data:** 07/01/2026
+
+#### 1. Apresentação
+
+Este edital regulamenta a realização do Hackathon de Desenvolvimento de Sistema Inteligente para Geração de Materiais Didáticos de Cultura Digital, com foco na criação de uma aplicação web simples e funcional para apoiar professores do Ensino Fundamental e Ensino Médio.
+
+O hackathon possui caráter educacional, tecnológico e inovador, incentivando o uso ético, responsável e pedagógico da Inteligência Artificial como ferramenta de apoio ao planejamento docente, respeitando a Base Nacional Comum Curricular (BNCC).
+
+A realização deste Hackathon decorre da proposta de um empresário do ramo que apresentou a demanda para a coordenação do curso Tecnólogo em Análise e Desenvolvimento de Sistemas do IFPI campus Piripiri. Como ponto de partida para a descrição deste hackathon foi utilizado o protótipo desenvolvido pelo próprio empresário.
+
+Vale destacar que o propósito do hackathon não é replicar este protótipo. As equipes têm liberdade criativa, desde que atendam aos requisitos especificados neste documento.
+
+#### 2. Objetivo Geral
+
+Desenvolver um sistema web de usuário único (single user) capaz de gerar automaticamente materiais didáticos de Cultura Digital organizados por disciplinas e unidades (aulas), utilizando Inteligência Artificial alinhada à BNCC.
+
+#### 3. Objetivos Específicos
+
+- Apoiar o planejamento pedagógico de professores da Educação Básica;
+- Organizar conteúdos por disciplinas e unidades de ensino;
+- Permitir a criação manual ou automática de unidades (aulas);
+- Gerar planos de aula alinhados à BNCC;
+- Gerar atividades avaliativas coerentes com cada aula;
+- Explorar o uso de IA generativa como ferramenta de apoio ao professor.
+
+#### 4. Público-Alvo do Sistema
+
+O sistema deverá ser pensado exclusivamente para professores:
+
+- Do Ensino Fundamental;
+- Do Ensino Médio.
+
+#### 5. Descrição Geral do Sistema
+
+O sistema proposto será uma aplicação web simples, acessível via navegador, sem necessidade de autenticação ou controle de múltiplos usuários.
+
+A aplicação permitirá que o professor:
+
+- Cadastre disciplinas (ex.: Matemática, Ciências, História);
+- Associe disciplinas a séries ou anos escolares;
+- Crie ou receba sugestões de unidades de ensino.
+
+Cada unidade representa uma aula específica dentro de uma disciplina.
+
+Para cada unidade/aula, o sistema deverá gerar obrigatoriamente:
+
+- Um plano de aula;
+- Uma atividade ou tarefa avaliativa.
+
+Como funcionalidade opcional ou sugestão, o sistema poderá também gerar:
+
+- Slides de apoio para uso em sala de aula.
+
+#### 6. Unidades de Ensino
+
+As unidades representam aulas individuais e podem ser:
+
+- Criadas manualmente pelo usuário, informando o tema da aula;
+- Sugeridas automaticamente pelo sistema com base na disciplina, série/ano e diretrizes da BNCC.
+
+Cada unidade deverá possuir um tema claramente definido e servir como base para a geração dos materiais didáticos correspondentes.
+
+#### 7. Uso de Inteligência Artificial
+
+O sistema deverá utilizar Inteligência Artificial Generativa para a produção dos materiais didáticos associados a cada unidade.
+
+É desejável que a solução utilize conceitos de Recuperação Aumentada por Geração (RAG), considerando como base de conhecimento:
+
+- Trechos da BNCC;
+- Diretrizes do MEC relacionadas à Cultura Digital;
+- Documentos pedagógicos oficiais.
+
+O alinhamento pedagógico e curricular dos conteúdos gerados será considerado um critério importante de avaliação.
+
+#### 8. Flexibilidade da Proposta
+
+A estrutura de telas, fluxos de navegação e organização funcional do sistema são livres. Os participantes têm total autonomia para definir:
+
+- Layout e identidade visual;
+- Fluxo de interação;
+- Tecnologias utilizadas;
+- Arquitetura da solução.
+
+Desde que o objetivo central do hackathon e os requisitos mínimos sejam respeitados.
+
+#### 9. Requisitos Funcionais
+
+- **RF01:** Cadastro e gerenciamento de disciplinas;
+- **RF02:** Criação manual de unidades (aulas);
+- **RF03:** Sugestão automática de unidades via IA;
+- **RF04:** Geração automática de plano de aula por unidade;
+- **RF05:** Geração automática de atividade avaliativa por unidade;
+- **RF06 (Opcional):** Geração de slides por unidade.
+
+#### 10. Participação no Hackathon
+
+Podem participar deste Hackathon alunos do IFPI Campus Piripiri do curso TADS ou Técnico em Informática integrado ao médio.
+
+- Participação individual ou em equipes de até 3 integrantes;
+- Cada equipe deverá indicar um líder;
+- Todos os integrantes devem contribuir ativamente para a solução.
+
+#### 11. Critérios de Avaliação
+
+As soluções serão avaliadas considerando:
+
+- Atendimento aos requisitos obrigatórios;
+- Criatividade da solução;
+- Qualidade da interface e experiência do usuário;
+- Organização do código e arquitetura;
+- Capacidade de explicação da solução e respostas a perguntas da banca;
+- Qualidade do material pedagógico gerado.
+
+A utilização de desenvolvimento assistido por IA não implicará em prejuízo para a avaliação dos participantes, no entanto, devem ser observados os seguintes pontos:
+
+1. O participante deve deixar claro qual foi o papel da IA no desenvolvimento desta solução durante a apresentação e no README do projeto;
+2. O participante precisa ter domínio total sobre a solução, sabendo explicar e manipular qualquer parte dela.
+
+#### 12. Premiação
+
+- 1º lugar: Contrato para desenvolvimento do sistema;
+- 2º lugar: R$ 400,00;
+- 3º lugar: Duas pizzas grandes.
+
+Os prêmios serão entregues exclusivamente ao líder da equipe.
+
+#### 13. Inscrições
+
+As inscrições deverão ser realizadas por meio do formulário online disponível em:  
+https://forms.gle/s4MEeMN81ga9LRXp6
+
+As inscrições poderão ser realizadas até o dia 16/01/2026.
+
+No ato da inscrição, o participante ou líder da equipe deverá informar:
+
+- Nome completo dos integrantes;
+- Identificação do líder;
+- E-mail para contato;
+- Link do repositório da solução no GitHub.
+
+Os participantes poderão continuar realizando alterações e commits no repositório informado até o dia anterior à apresentação do hackathon.
+
+Na data da apresentação, os participantes deverão providenciar uma versão da solução hospedada temporariamente (deploy) para facilitar a avaliação por parte da banca.
+
+#### 14. Cronograma e Apresentações
+
+O Hackathon seguirá o seguinte cronograma:
+
+- Até 16/01/2026: Período de inscrições das equipes;
+- 30/01/2026 (manhã): Os laboratórios do IFPI Campus Piripiri estarão disponíveis para que as equipes possam se reunir, realizar os últimos ajustes na solução e se preparar para as apresentações;
+- 30/01/2026 (a partir das 13h30): Início das apresentações das equipes.
+
+Cada equipe terá um tempo máximo de 6 minutos para apresentar a solução desenvolvida.
+
+Após a apresentação, a banca avaliadora poderá realizar perguntas sobre a solução, abrangendo aspectos técnicos, funcionais e arquiteturais.
+
+#### 15. Disposições Finais
+
+A participação no hackathon implica a aceitação integral deste edital. Os casos omissos serão resolvidos pela organização do evento.
