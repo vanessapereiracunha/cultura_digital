@@ -368,16 +368,7 @@ export default function MateriaisPage({ disciplina, unidade, onVoltar }: Materia
                         </a>
                       )}
                       
-                      {slideResult.pptx_url && (
-                        <a 
-                          href={slideResult.pptx_url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700"
-                        >
-                          💾 Baixar PowerPoint (.pptx)
-                        </a>
-                      )}
+                      {/* Botão de PPTX removido a pedido */}
 
                       {slideResult.pdf_url && (
                         <a 

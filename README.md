@@ -82,9 +82,6 @@ Principais arquivos de documentação deste projeto:
 - `docs/HU.md` — Histórias de Usuário  
 - `docs/UC.md` — Casos de Uso  
 - `docs/ARQUITETURA.md` — Visão de Arquitetura (proposta para o sistema)  
-- `docs/ADR.md` — Decisão arquitetural do frontend e integração com RAG  
-- `docs/ERD.md` — Modelo Entidade-Relacionamento  
-- `docs/TELAS.md` — Visão de telas e responsabilidades  
 - `docs/SPRINTS.md` — Planejamento de Sprints  
 - `docs/hackaton/EDITAL.md` — Edital completo do hackathon  
 - `docs/github/PATTERN.md` — Padrão de commits, branches, PRs e merges
@@ -95,40 +92,5 @@ Principais arquivos de documentação deste projeto:
 
 Este projeto está sendo desenvolvido pelos estudantes:
 
-- **Vanessa Pereira** — 4º módulo de Análise e Desenvolvimento de Sistemas (ADS)
+- **Vanessa Pereira** — 4º módulo de Análise e Desenvolvimento de Sistemas (ADS)  
 - **Matusalen Alves** — 4º módulo de Análise e Desenvolvimento de Sistemas (ADS)
-
----
-
-## Como Rodar a Demo (Local)
-
-Para apresentar a solução no dia do hackathon:
-
-### 1. Pré-requisitos
-- Node.js 18+ e npm
-- Python 3.10+ e Poetry (ou pip)
-- Ollama rodando localmente (com modelo `llama3.2`)
-
-### 2. Iniciar o Backend (RAG)
-```bash
-# Terminal 1
-cd rag
-poetry install
-poetry run uvicorn main:app --reload
-# O backend rodará em http://localhost:8000
-```
-
-### 3. Iniciar o Frontend (Aplicação)
-```bash
-# Terminal 2
-# Na raiz do projeto
-npm install
-npm run dev
-# O frontend rodará em http://localhost:5173
-```
-
-### 4. Usar o Sistema
-Acesse o link do frontend no navegador e siga o fluxo:
-1. Cadastre uma disciplina.
-2. Crie ou gere uma unidade.
-3. Gere os materiais (Plano de Aula e Atividade).
