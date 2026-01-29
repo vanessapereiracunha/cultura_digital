@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useUnidades } from "./hooks";
 import type { Unidade } from "./models";
 import { PageHeader } from "../../shared/components/PageHeader";
@@ -8,7 +8,7 @@ import { Dialog } from "../../shared/components/Dialog";
 import { Input } from "../../shared/components/FormFields";
 import { EmptyState } from "../../shared/components/EmptyState";
 import { UnidadeCard } from "./components/UnidadeCard";
-import { Sparkles, Plus, Wand2 } from "lucide-react";
+import { Sparkles, Plus } from "lucide-react";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
 
 type UnidadesPageProps = {
@@ -36,6 +36,12 @@ export default function UnidadesPage({ disciplina, onVoltar, onSelecionarUnidade
     <UnidadesView
       disciplina={disciplina}
       onVoltar={onVoltar}
+      backLabel={
+        <>
+          <span className="sm:hidden">Voltar</span>
+          <span className="hidden sm:inline">Voltar para Disciplinas</span>
+        </>
+      }
       unidades={unidades}
       criando={criando}
       nome={nome}
@@ -78,6 +84,7 @@ export default function UnidadesPage({ disciplina, onVoltar, onSelecionarUnidade
 type UnidadesViewProps = {
   disciplina: { id: string; nome: string; serieAno: string };
   onVoltar: () => void;
+  backLabel?: ReactNode;
   unidades: Unidade[];
   criando: boolean;
   nome: string;
@@ -102,6 +109,7 @@ type UnidadesViewProps = {
 function UnidadesView({
   disciplina,
   onVoltar,
+  backLabel,
   unidades,
   criando,
   nome,
@@ -128,29 +136,33 @@ function UnidadesView({
         title={`Unidade - ${disciplina.nome}`}
         subtitle={disciplina.serieAno}
         onBack={onVoltar}
-        backLabel="Voltar para Disciplinas"
+        backLabel={backLabel ?? (
+          <>
+            <span className="sm:hidden">Voltar</span>
+            <span className="hidden sm:inline">Voltar para Disciplinas</span>
+          </>
+        )}
       />
 
       <Card
         title="Unidades de Ensino"
-        icon={<Wand2 className="h-5 w-5" />}
         actions={
           !criando && (
-            <>
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
               <Button 
                 variant="outline" 
                 onClick={onSolicitarSugestoes} 
                 disabled={loadingSugestoes} 
                 loading={loadingSugestoes}
                 icon={<Sparkles className="h-5 w-5" />}
-                className="mr-2"
+                className="w-full sm:w-auto"
               >
                 {loadingSugestoes ? "Gerando..." : "Gerar com IA"}
               </Button>
-              <Button onClick={onAbrirCriacao} icon={<Plus className="h-5 w-5 " />}>
+              <Button onClick={onAbrirCriacao} icon={<Plus className="h-5 w-5 " />} className="w-full sm:w-auto">
                 Nova Unidade
               </Button>
-            </>
+            </div>
           )
         }
       >

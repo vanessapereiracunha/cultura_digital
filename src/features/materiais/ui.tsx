@@ -35,6 +35,12 @@ export default function MateriaisPage({ disciplina, unidade, onVoltar }: Materia
       disciplina={disciplina}
       unidade={unidade}
       onVoltar={onVoltar}
+      backLabel={
+        <>
+          <span className="sm:hidden">Voltar</span>
+          <span className="hidden sm:inline">Voltar para Unidades</span>
+        </>
+      }
       planoState={{ plano, loadingPlano, gerarPlano, salvarPlanoEditado, removerPlano }}
       atividadeState={{ atividade, loadingAtividade, gerarAtividade, salvarAtividadeEditada, removerAtividade }}
       slidesState={{ slides, loadingSlides, gerarSlides, removerSlides }}
@@ -46,6 +52,7 @@ type MateriaisViewProps = {
   disciplina: Disciplina;
   unidade: Unidade;
   onVoltar: () => void;
+  backLabel?: React.ReactNode;
   planoState: {
     plano: ReturnType<typeof useMateriais>["plano"];
     loadingPlano: boolean;
@@ -72,6 +79,7 @@ function MateriaisView({
   disciplina,
   unidade,
   onVoltar,
+  backLabel,
   planoState,
   atividadeState,
   slidesState,
@@ -82,7 +90,12 @@ function MateriaisView({
         title={`${unidade.nome}`}
         subtitle={`${disciplina.nome} - ${disciplina.serieAno}`}
         onBack={onVoltar}
-        backLabel="Voltar para Unidades"
+        backLabel={backLabel ?? (
+          <>
+            <span className="sm:hidden">Voltar</span>
+            <span className="hidden sm:inline">Voltar para Unidades</span>
+          </>
+        )}
       />
 
       <div className="grid">
