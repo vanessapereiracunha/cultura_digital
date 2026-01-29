@@ -13,7 +13,7 @@ export function DisciplinaList({ disciplinas, onSelectDisciplina, onDeleteDiscip
   if (disciplinas.length === 0) {
     return (
       <EmptyState
-        icon={<School className="h-8 w-8" />}
+        icon={<School className="h-8 w-8 text-slate-600 dark:text-slate-200" />}
         title="Nenhuma disciplina encontrada"
         description="Clique em 'Criar disciplina' para começar."
       />

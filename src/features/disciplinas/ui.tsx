@@ -95,6 +95,7 @@ function DisciplinasView({
           open={criando}
           onClose={onFecharCriacao}
           title="Nova Disciplina"
+          className="w-[520px] max-w-[92vw]"
         >
           <DisciplinaForm 
             onSubmit={onCriarDisciplina} 
