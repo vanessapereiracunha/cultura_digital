@@ -37,7 +37,7 @@ export function Dialog({ open, title, children, actions, onClose, className = ""
   return (
     <dialog
       ref={dialogRef}
-      className={`backdrop:bg-black/60 rounded-2xl border border-slate-200 bg-white p-6 text-slate-900 shadow-2xl dark:border-white/10 dark:bg-slate-900/95 dark:text-slate-100 ${className}`}
+      className={`backdrop:bg-black/60 w-[520px] max-w-[90vw] rounded-2xl border border-slate-200 bg-white p-6 text-slate-900 shadow-2xl dark:border-white/10 dark:bg-slate-900 dark:text-slate-100 ${className}`}
       onClick={handleBackdropClick}
       onClose={onClose}
     >
@@ -50,4 +50,4 @@ export function Dialog({ open, title, children, actions, onClose, className = ""
       )}
     </dialog>
   );
-}
+}1
