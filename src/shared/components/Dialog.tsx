@@ -27,8 +27,6 @@ export function Dialog({ open, title, children, actions, onClose, className = ""
     }
   }, [open]);
 
-  // Fecha ao clicar no backdrop (nativo)
-  // O evento de click no dialog dispara se clicar no ::backdrop
   const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
     const dialog = dialogRef.current;
     if (dialog && e.target === dialog) {
@@ -37,16 +35,16 @@ export function Dialog({ open, title, children, actions, onClose, className = ""
   };
 
   return (
-    <dialog 
+    <dialog
       ref={dialogRef}
-      className={`modal ${className}`}
+      className={`backdrop:bg-black/60 rounded-2xl border border-slate-200 bg-white p-6 text-slate-900 shadow-2xl dark:border-white/10 dark:bg-slate-900/95 dark:text-slate-100 ${className}`}
       onClick={handleBackdropClick}
-      onClose={onClose} // Captura ESC key nativo
+      onClose={onClose}
     >
-      <h5>{title}</h5>
-      <div>{children}</div>
+      <h5 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">{title}</h5>
+      <div className="space-y-4 text-slate-800 dark:text-slate-100">{children}</div>
       {actions && (
-        <nav className="right-align mt-4">
+        <nav className="mt-6 flex items-center justify-end gap-3">
           {actions}
         </nav>
       )}

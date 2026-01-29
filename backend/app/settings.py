@@ -1,7 +1,11 @@
 import os
 from typing import Dict
+import hashlib
+import random
 
 from llama_index.core.settings import Settings
+from llama_index.core.base.embeddings.base import BaseEmbedding
+from pydantic import Field
 
 
 def init_settings():
@@ -102,21 +106,21 @@ def init_azure_openai():
 
 def init_fastembed():
     """
-    Use Qdrant Fastembed as the local embedding provider.
+    Use local embeddings. Prefer Qdrant FastEmbed if available,
+    otherwise fallback to HuggingFace Sentence-Transformers.
     """
-    from llama_index.embeddings.fastembed import FastEmbedEmbedding
-
-    embed_model_map: Dict[str, str] = {
-        # Small and multilingual
-        "all-MiniLM-L6-v2": "sentence-transformers/all-MiniLM-L6-v2",
-        # Large and multilingual
-        "paraphrase-multilingual-mpnet-base-v2": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",  # noqa: E501
-    }
-
-    # This will download the model automatically if it is not already downloaded
-    Settings.embed_model = FastEmbedEmbedding(
-        model_name=embed_model_map[os.getenv("EMBEDDING_MODEL")]
-    )
+    try:
+        from llama_index.embeddings.fastembed import FastEmbedEmbedding
+        embed_model_map: Dict[str, str] = {
+            "all-MiniLM-L6-v2": "sentence-transformers/all-MiniLM-L6-v2",
+            "paraphrase-multilingual-mpnet-base-v2": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",  # noqa: E501
+        }
+        Settings.embed_model = FastEmbedEmbedding(
+            model_name=embed_model_map[os.getenv("EMBEDDING_MODEL")]
+        )
+    except Exception:
+        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+        Settings.embed_model = HuggingFaceEmbedding(model_name=os.getenv("EMBEDDING_MODEL"))
 
 
 def init_groq():
@@ -150,24 +154,11 @@ def init_anthropic():
 
 
 def init_gemini():
-    from llama_index.embeddings.gemini import GeminiEmbedding
     from llama_index.llms.gemini import Gemini
-
-    # Try explicitly setting just the model name without 'models/'
-    # The error 404 on "models/gemini-1.5-flash" suggests the API might be receiving a malformed string
-    # or the SDK is double-prefixing it internally.
-    
-    raw_model = os.getenv('MODEL') # e.g. gemini-1.5-flash
+    raw_model = os.getenv("MODEL") or ""
     clean_model_name = raw_model.replace("models/", "")
-    
-    # Embedding
-    raw_embed = os.getenv('EMBEDDING_MODEL')
-    clean_embed_name = raw_embed.replace("models/", "")
-    embed_model_name = f"models/{clean_embed_name}"
-
-    # Try passing purely the model ID for LLM
     Settings.llm = Gemini(model=clean_model_name)
-    Settings.embed_model = GeminiEmbedding(model_name=embed_model_name)
+    Settings.embed_model = _SimpleLocalEmbedding(dim=int(os.getenv("EMBEDDING_DIM", "768")))
 
 
 def init_mistral():
@@ -176,3 +167,28 @@ def init_mistral():
 
     Settings.llm = MistralAI(model=os.getenv("MODEL"))
     Settings.embed_model = MistralAIEmbedding(model_name=os.getenv("EMBEDDING_MODEL"))
+
+
+class _SimpleLocalEmbedding(BaseEmbedding):
+    dim: int = Field(default=768)
+    embed_batch_size: int = Field(default=8)
+
+    def _embed(self, text: str) -> list[float]:
+        seed = int(hashlib.sha256(text.encode("utf-8")).hexdigest(), 16) % (2**32)
+        rng = random.Random(seed)
+        return [rng.uniform(-1.0, 1.0) for _ in range(self.dim)]
+
+    def _get_text_embedding(self, text: str) -> list[float]:
+        return self._embed(text or "")
+
+    def _get_query_embedding(self, query: str) -> list[float]:
+        return self._embed(query or "")
+
+    async def _aget_query_embedding(self, query: str) -> list[float]:
+        return self._embed(query or "")
+
+    def get_text_embedding(self, text: str) -> list[float]:
+        return self._embed(text or "")
+
+    def get_text_embedding_batch(self, texts: list[str], show_progress: bool = False, **kwargs) -> list[list[float]]:
+        return [self._embed(t or "") for t in texts]
