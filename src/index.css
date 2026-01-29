@@ -31,4 +31,37 @@
   .dark a {
     @apply text-brand-200 hover:text-brand-100;
   }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc; /* thumb, track (Firefox) */
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #f8fafc;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+    border: 2px solid #f8fafc;
+  }
+
+  .dark * {
+    scrollbar-color: #64748b #0f172a;
+  }
+
+  .dark *::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+
+  .dark *::-webkit-scrollbar-thumb {
+    background: #64748b;
+    border: 2px solid #0f172a;
+  }
 }

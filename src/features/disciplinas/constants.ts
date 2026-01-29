@@ -1,18 +1,3 @@
-export const SERIES_ESCOLARES = [
-  "1º Ano Fundamental",
-  "2º Ano Fundamental",
-  "3º Ano Fundamental",
-  "4º Ano Fundamental",
-  "5º Ano Fundamental",
-  "6º Ano Fundamental",
-  "7º Ano Fundamental",
-  "8º Ano Fundamental",
-  "9º Ano Fundamental",
-  "1ª Série Ensino Médio",
-  "2ª Série Ensino Médio",
-  "3ª Série Ensino Médio",
-] as const;
-
 export const OPCOES_SERIES = [
   {
     label: "Ensino Fundamental - Anos Iniciais",
@@ -61,5 +46,3 @@ export const DISCIPLINAS_ESCOLARES = [
   "Cultura Digital",
   "Tecnologia e Inovação",
 ];
-
-export type SerieEscolar = (typeof SERIES_ESCOLARES)[number];
