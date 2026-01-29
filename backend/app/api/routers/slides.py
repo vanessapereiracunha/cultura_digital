@@ -6,6 +6,8 @@ import logging
 from app.engine.index import get_index
 from llama_index.core.settings import Settings
 
+from typing import List, Optional
+
 slides_router = APIRouter()
 logger = logging.getLogger("uvicorn")
 
@@ -13,6 +15,7 @@ class SlideRequest(BaseModel):
     topic: str
     slides_count: int = 5
     language: str = "pt-BR"
+    serieAno: Optional[str] = None
 
 import asyncio
 
@@ -33,8 +36,25 @@ async def generate_slides(request: SlideRequest):
             nodes = retriever.retrieve(request.topic)
             context = "\n\n".join([n.get_content() for n in nodes])
         
+        # 1. Determine Tone and Style based on serieAno
+        tone_instruction = ""
+        is_young_audience = False
+        if request.serieAno:
+            young_grades = ["1º ano", "2º ano", "3º ano", "4º ano", "5º ano", "1 ano", "2 ano", "3 ano", "4 ano", "5 ano", "Fundamental I"]
+            if any(grade.lower() in request.serieAno.lower() for grade in young_grades):
+                is_young_audience = True
+                tone_instruction = (
+                    "O público-alvo são crianças pequenas (Ensino Fundamental I). "
+                    "Use uma linguagem muito simples, alegre, lúdica e divertida. "
+                    "Inclua analogias criativas e emojis para tornar o conteúdo visualmente atraente e amigável."
+                )
+            else:
+                tone_instruction = "O público-alvo são estudantes. Use uma linguagem clara, objetiva e educativa."
+
         prompt = (
             f"Crie um roteiro de conteúdo para uma apresentação de slides educacional sobre: '{request.topic}'.\n"
+            f"Série/Ano: {request.serieAno if request.serieAno else 'Não especificado'}.\n"
+            f"{tone_instruction}\n"
             f"A apresentação deve ter aproximadamente {request.slides_count} slides.\n"
             f"Use o seguinte contexto da BNCC/Currículo APENAS como base para o conteúdo pedagógico, mas NÃO inclua seções de metadados, alinhamento ou códigos da BNCC nos slides.\n"
             f"Contexto:\n{context}\n\n"
@@ -64,7 +84,7 @@ async def generate_slides(request: SlideRequest):
         "n_slides": request.slides_count,
         "language": request.language,
         "template": "general", # Reverted to 'general' as 'creative' is not a valid template ID
-        "mood": "fun",         # Keeping mood as a hint, hoping it's supported or ignored
+        "mood": "fun" if is_young_audience else "professional",
         "author": "Cultura Digital"
     }
 

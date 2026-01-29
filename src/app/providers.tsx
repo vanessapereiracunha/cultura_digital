@@ -1,11 +1,13 @@
 import { BrowserRouter } from "react-router-dom";
 import type { ReactNode } from "react";
+import { ThemeProvider } from "../shared/contexts/ThemeContext";
 
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <BrowserRouter>
-      {/* Aqui poderíamos adicionar outros providers: ThemeProvider, AuthProvider, etc. */}
-      {children}
+      <ThemeProvider>
+        {children}
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

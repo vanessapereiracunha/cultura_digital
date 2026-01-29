@@ -1,31 +1,11 @@
-import { postRag } from "../rag/infra";
-import { gerarAtividadeRemota } from "../rag/services";
-import type { LessonPlanRequest, LessonPlanResponse, PlanoDeAula, AtividadeAvaliativa, Slide } from "./models";
-import { loadPlanos, savePlanos, loadAtividades, saveAtividades } from "../../core/storage/materiaisStorage";
-import { loadSlides, saveSlides } from "../../core/storage/slidesStorage";
-
-// --- Slides ---
-export type SlideRequest = {
-  topic: string;
-  slides_count?: number;
-};
-
-export type SlideResponse = {
-  pptx_url?: string;
-  pdf_url?: string;
-  edit_url?: string;
-  presentation_id?: string;
-  [key: string]: any;
-};
+import type { LessonPlanRequest, LessonPlanResponse, PlanoDeAula, AtividadeAvaliativa, Slide, SlideRequest } from "./models";
+import { planoRepository } from "../../core/repositories/planos";
+import { atividadeRepository } from "../../core/repositories/atividades";
+import { slidesRepository } from "../../core/repositories/slides";
+import { generateActivity, generateLessonPlan, generateSlides } from "../rag/usecases";
 
 export async function gerarSlides(request: SlideRequest, unidadeId: string): Promise<Slide> {
-  const body = {
-    topic: request.topic,
-    slides_count: request.slides_count ?? 8,
-    language: "pt-BR",
-  };
-  
-  const response = await postRag<SlideResponse>("/api/slides/generate", body);
+  const response = await generateSlides(request);
   
   return {
     id: crypto.randomUUID(),
@@ -39,63 +19,35 @@ export async function gerarSlides(request: SlideRequest, unidadeId: string): Pro
 }
 
 export function buscarSlidesDaUnidade(unidadeId: string): Slide | null {
-  const slides = loadSlides();
-  return slides.find((s) => s.unidadeId === unidadeId) || null;
+  return slidesRepository.getByUnidade(unidadeId) || null;
 }
 
 export function salvarSlides(slide: Slide): void {
-  const slides = loadSlides();
-  const index = slides.findIndex((s) => s.unidadeId === slide.unidadeId);
-  
-  if (index >= 0) {
-    slides[index] = slide;
-  } else {
-    slides.push(slide);
-  }
-  
-  saveSlides(slides);
+  slidesRepository.upsert(slide);
 }
 
 export function removerSlides(id: string): void {
-  const slides = loadSlides();
-  const filtered = slides.filter((s) => s.id !== id);
-  saveSlides(filtered);
+  slidesRepository.remove(id);
 }
 
 export async function gerarPlanoDeAula(
   request: LessonPlanRequest,
   unidadeId: string
 ): Promise<LessonPlanResponse> {
-  const response = await postRag<LessonPlanResponse>("/api/units/lesson-plan", request);
-  return response;
-}
-
-export async function regenerarPdfPlano(data: any): Promise<{ filename: string; download_url: string }> {
-  return await postRag<{ filename: string; download_url: string }>("/api/units/lesson-plan/pdf", { data });
+  void unidadeId;
+  return generateLessonPlan(request);
 }
 
 export function buscarPlanoDaUnidade(unidadeId: string): PlanoDeAula | null {
-  const planos = loadPlanos();
-  return planos.find((p) => p.unidadeId === unidadeId) || null;
+  return planoRepository.getByUnidade(unidadeId) || null;
 }
 
 export function salvarPlano(plano: PlanoDeAula): void {
-  const planos = loadPlanos();
-  const index = planos.findIndex((p) => p.unidadeId === plano.unidadeId);
-  
-  if (index >= 0) {
-    planos[index] = plano;
-  } else {
-    planos.push(plano);
-  }
-  
-  savePlanos(planos);
+  planoRepository.upsert(plano);
 }
 
 export function removerPlano(id: string): void {
-  const planos = loadPlanos();
-  const filtered = planos.filter((p) => p.id !== id);
-  savePlanos(filtered);
+  planoRepository.remove(id);
 }
 
 // --- Atividades ---
@@ -104,7 +56,7 @@ export async function gerarAtividade(
   request: { disciplina: string; assunto: string; nivel: string },
   unidadeId: string
 ): Promise<AtividadeAvaliativa> {
-  const response = await gerarAtividadeRemota(request);
+  const response = await generateActivity(request);
   
   return {
     id: crypto.randomUUID(),
@@ -116,26 +68,13 @@ export async function gerarAtividade(
 }
 
 export function buscarAtividadeDaUnidade(unidadeId: string): AtividadeAvaliativa | null {
-  const atividades = loadAtividades();
-  return atividades.find((a) => a.unidadeId === unidadeId) || null;
+  return atividadeRepository.getByUnidade(unidadeId) || null;
 }
 
 export function salvarAtividade(atividade: AtividadeAvaliativa): void {
-  const atividades = loadAtividades();
-  const index = atividades.findIndex((a) => a.unidadeId === atividade.unidadeId);
-  
-  if (index >= 0) {
-    atividades[index] = atividade;
-  } else {
-    atividades.push(atividade);
-  }
-  
-  saveAtividades(atividades);
+  atividadeRepository.upsert(atividade);
 }
 
 export function removerAtividade(id: string): void {
-  const atividades = loadAtividades();
-  const filtered = atividades.filter((a) => a.id !== id);
-  saveAtividades(filtered);
+  atividadeRepository.remove(id);
 }
-

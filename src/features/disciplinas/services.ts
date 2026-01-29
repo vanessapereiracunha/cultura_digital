@@ -1,27 +1,18 @@
 import type { Disciplina } from "./models";
-import { loadDisciplinas, saveDisciplinas } from "../../core/storage/disciplinaStorage";
+import { disciplinaRepository } from "../../core/repositories/disciplinas";
 
 export function listarDisciplinas(): Disciplina[] {
-  return loadDisciplinas();
+  return disciplinaRepository.list();
 }
 
 export function buscarDisciplina(id: string): Disciplina | undefined {
-  return loadDisciplinas().find((d) => d.id === id);
+  return disciplinaRepository.get(id);
 }
 
 export function salvarDisciplina(disciplina: Disciplina): void {
-  const existentes = loadDisciplinas();
-  const indice = existentes.findIndex((item) => item.id === disciplina.id);
-  if (indice >= 0) {
-    existentes[indice] = disciplina;
-  } else {
-    existentes.push(disciplina);
-  }
-  saveDisciplinas(existentes);
+  disciplinaRepository.upsert(disciplina);
 }
 
 export function removerDisciplina(id: string): void {
-  const existentes = loadDisciplinas();
-  const filtradas = existentes.filter((item) => item.id !== id);
-  saveDisciplinas(filtradas);
+  disciplinaRepository.remove(id);
 }

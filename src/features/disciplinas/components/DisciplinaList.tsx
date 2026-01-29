@@ -1,6 +1,7 @@
 import type { Disciplina } from "../models";
 import { DisciplinaCard } from "./DisciplinaCard";
 import { EmptyState } from "../../../shared/components/EmptyState";
+import { School } from "lucide-react";
 
 type DisciplinaListProps = {
   disciplinas: Disciplina[];
@@ -12,7 +13,7 @@ export function DisciplinaList({ disciplinas, onSelectDisciplina, onDeleteDiscip
   if (disciplinas.length === 0) {
     return (
       <EmptyState
-        icon="school"
+        icon={<School className="h-8 w-8" />}
         title="Nenhuma disciplina encontrada"
         description="Clique em 'Criar disciplina' para começar."
       />
@@ -20,17 +21,17 @@ export function DisciplinaList({ disciplinas, onSelectDisciplina, onDeleteDiscip
   }
 
   return (
-    <div className="grid">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
       {disciplinas.map((disciplina) => (
-        <div key={disciplina.id} className="s12 m6 l4">
-          <DisciplinaCard
-            disciplina={disciplina}
-            onSelect={onSelectDisciplina}
-            onDelete={onDeleteDisciplina}
-          />
-        </div>
+        <DisciplinaCard
+          key={disciplina.id}
+          disciplina={disciplina}
+          actions={{
+            onSelect: onSelectDisciplina ? () => onSelectDisciplina(disciplina) : undefined,
+            onDelete: onDeleteDisciplina ? () => onDeleteDisciplina(disciplina) : undefined,
+          }}
+        />
       ))}
     </div>
   );
 }
-

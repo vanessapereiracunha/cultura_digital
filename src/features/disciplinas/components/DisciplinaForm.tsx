@@ -33,9 +33,9 @@ export function DisciplinaForm({ initialValues, onSubmit, onCancel }: Disciplina
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <Select
-        label="Série/Ano"
+        label="Ano letivo"
         value={serieAno}
         onChange={(event) => setSerieAno(event.target.value)}
       >
@@ -65,17 +65,17 @@ export function DisciplinaForm({ initialValues, onSubmit, onCancel }: Disciplina
       </Select>
 
       <Input
-        label="Assunto / Tópico Principal (Opcional)"
+        label="Assunto (Opcional)"
         value={assunto}
         onChange={(event) => setAssunto(event.target.value)}
         placeholder=" "
       />
 
-      <nav className="right-align mt-4">
-        <Button variant="transparent" onClick={onCancel} className="mr-2">
+      <nav className="mt-6 flex items-center justify-between">
+        <Button variant="ghost" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button type="submit">Confirmar criação</Button>
+        <Button type="submit">Confirmar</Button>
       </nav>
     </form>
   );

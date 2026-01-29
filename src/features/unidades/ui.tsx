@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { listarUnidadesDaDisciplina, salvarUnidade, removerUnidade, gerarSugestaoUnidades } from "./services";
+import { useUnidades } from "./hooks";
 import type { Unidade } from "./models";
 import { PageHeader } from "../../shared/components/PageHeader";
 import { Card } from "../../shared/components/Card";
 import { Button } from "../../shared/components/Button";
 import { Dialog } from "../../shared/components/Dialog";
-import { Input, Textarea } from "../../shared/components/FormFields";
+import { Input } from "../../shared/components/FormFields";
 import { EmptyState } from "../../shared/components/EmptyState";
 import { UnidadeCard } from "./components/UnidadeCard";
+import { Sparkles, Plus, Wand2 } from "lucide-react";
+import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
 
 type UnidadesPageProps = {
   disciplina: { id: string; nome: string; serieAno: string };
@@ -16,71 +18,114 @@ type UnidadesPageProps = {
 };
 
 export default function UnidadesPage({ disciplina, onVoltar, onSelecionarUnidade }: UnidadesPageProps) {
-  const [unidades, setUnidades] = useState<Unidade[]>(listarUnidadesDaDisciplina(disciplina.id));
+  const {
+    unidades,
+    loadingSugestoes,
+    criarUnidade,
+    removerUnidade,
+    sugerirUnidades,
+  } = useUnidades(disciplina);
+
   const [criando, setCriando] = useState(false);
-  const [gerando, setGerando] = useState(false);
+  const [confirmarIA, setConfirmarIA] = useState(false);
+  const [unidadeParaExcluir, setUnidadeParaExcluir] = useState<string | null>(null);
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
 
-  async function handleGerarSugestoes() {
-    if (confirm("Isso usará IA para sugerir unidades com base na BNCC. Deseja continuar?")) {
-      setGerando(true);
-      try {
-        const sugestoes = await gerarSugestaoUnidades({
-          disciplina: disciplina.nome,
-          serieAno: disciplina.serieAno,
-        });
-
-        for (const s of sugestoes) {
-          const novaUnidade: Unidade = {
-            id: crypto.randomUUID(),
-            disciplinaId: disciplina.id,
-            nome: s.nome,
-            descricao: s.descricao,
-            materiais: [],
-            origem: "ia",
-          };
-          salvarUnidade(novaUnidade);
-        }
-        setUnidades(listarUnidadesDaDisciplina(disciplina.id));
-      } catch (error) {
-        alert("Erro ao gerar sugestões. Tente novamente.");
-        console.error(error);
-      } finally {
-        setGerando(false);
-      }
-    }
-  }
-
-  function handleSalvar() {
-    if (!nome.trim()) return;
-
-    const novaUnidade: Unidade = {
-      id: crypto.randomUUID(),
-      disciplinaId: disciplina.id,
-      nome: nome.trim(),
-      descricao: descricao.trim(),
-      materiais: [], // Inicialmente sem materiais
-    };
-
-    salvarUnidade(novaUnidade);
-    setUnidades(listarUnidadesDaDisciplina(disciplina.id));
-    setCriando(false);
-    setNome("");
-    setDescricao("");
-  }
-
-  function handleRemover(id: string) {
-    if (confirm("Tem certeza que deseja remover esta unidade?")) {
-      removerUnidade(id);
-      setUnidades(listarUnidadesDaDisciplina(disciplina.id));
-    }
-  }
-
   return (
-    <main className="responsive">
+    <UnidadesView
+      disciplina={disciplina}
+      onVoltar={onVoltar}
+      unidades={unidades}
+      criando={criando}
+      nome={nome}
+      descricao={descricao}
+      confirmandoIA={confirmarIA}
+      unidadeParaExcluir={unidadeParaExcluir}
+      loadingSugestoes={loadingSugestoes}
+      onSelecionarUnidade={onSelecionarUnidade}
+      onAbrirCriacao={() => setCriando(true)}
+      onFecharCriacao={() => {
+        setCriando(false);
+        setNome("");
+        setDescricao("");
+      }}
+      onChangeNome={setNome}
+      onChangeDescricao={setDescricao}
+      onSalvarNovaUnidade={() => {
+        if (!nome.trim()) return;
+        criarUnidade({ nome, descricao });
+        setCriando(false);
+        setNome("");
+        setDescricao("");
+      }}
+      onSolicitarExclusao={(id) => setUnidadeParaExcluir(id)}
+      onConfirmarExclusao={() => {
+        if (unidadeParaExcluir) removerUnidade(unidadeParaExcluir);
+        setUnidadeParaExcluir(null);
+      }}
+      onCancelarExclusao={() => setUnidadeParaExcluir(null)}
+      onSolicitarSugestoes={() => setConfirmarIA(true)}
+      onConfirmarSugestoes={async () => {
+        setConfirmarIA(false);
+        await sugerirUnidades();
+      }}
+      onCancelarSugestoes={() => setConfirmarIA(false)}
+    />
+  );
+}
+
+type UnidadesViewProps = {
+  disciplina: { id: string; nome: string; serieAno: string };
+  onVoltar: () => void;
+  unidades: Unidade[];
+  criando: boolean;
+  nome: string;
+  descricao: string;
+  confirmandoIA: boolean;
+  unidadeParaExcluir: string | null;
+  loadingSugestoes: boolean;
+  onSelecionarUnidade: (unidade: Unidade) => void;
+  onAbrirCriacao: () => void;
+  onFecharCriacao: () => void;
+  onChangeNome: (value: string) => void;
+  onChangeDescricao: (value: string) => void;
+  onSalvarNovaUnidade: () => void;
+  onSolicitarExclusao: (id: string) => void;
+  onConfirmarExclusao: () => void;
+  onCancelarExclusao: () => void;
+  onSolicitarSugestoes: () => void;
+  onConfirmarSugestoes: () => void;
+  onCancelarSugestoes: () => void;
+};
+
+function UnidadesView({
+  disciplina,
+  onVoltar,
+  unidades,
+  criando,
+  nome,
+  descricao,
+  confirmandoIA,
+  unidadeParaExcluir,
+  loadingSugestoes,
+  onSelecionarUnidade,
+  onAbrirCriacao,
+  onFecharCriacao,
+  onChangeNome,
+  onChangeDescricao,
+  onSalvarNovaUnidade,
+  onSolicitarExclusao,
+  onConfirmarExclusao,
+  onCancelarExclusao,
+  onSolicitarSugestoes,
+  onConfirmarSugestoes,
+  onCancelarSugestoes,
+}: UnidadesViewProps) {
+  return (
+    <main className="space-y-8">
       <PageHeader
-        title={`Unidades - ${disciplina.nome}`}
+        title={`Unidade - ${disciplina.nome}`}
         subtitle={disciplina.serieAno}
         onBack={onVoltar}
         backLabel="Voltar para Disciplinas"
@@ -88,21 +133,21 @@ export default function UnidadesPage({ disciplina, onVoltar, onSelecionarUnidade
 
       <Card
         title="Unidades de Ensino"
-        icon="view_list"
+        icon={<Wand2 className="h-5 w-5" />}
         actions={
           !criando && (
             <>
               <Button 
-                variant="border" 
-                onClick={handleGerarSugestoes} 
-                disabled={gerando} 
-                loading={gerando}
-                icon="auto_awesome"
+                variant="outline" 
+                onClick={onSolicitarSugestoes} 
+                disabled={loadingSugestoes} 
+                loading={loadingSugestoes}
+                icon={<Sparkles className="h-5 w-5" />}
                 className="mr-2"
               >
-                {gerando ? "Gerando..." : "Gerar com IA"}
+                {loadingSugestoes ? "Gerando..." : "Gerar com IA"}
               </Button>
-              <Button onClick={() => setCriando(true)} icon="add">
+              <Button onClick={onAbrirCriacao} icon={<Plus className="h-5 w-5 " />}>
                 Nova Unidade
               </Button>
             </>
@@ -115,47 +160,65 @@ export default function UnidadesPage({ disciplina, onVoltar, onSelecionarUnidade
             description="Cadastre uma unidade manualmente ou gere com IA."
           />
         ) : (
-          <div className="grid">
+          <div className="space-y-3">
             {unidades.map((unidade) => (
-              <div key={unidade.id} className="s12">
-                <UnidadeCard 
-                  unidade={unidade}
-                  onSelect={onSelecionarUnidade}
-                  onDelete={handleRemover}
-                />
-              </div>
+              <UnidadeCard 
+                key={unidade.id}
+                unidade={unidade}
+                actions={{
+                  onSelect: () => onSelecionarUnidade(unidade),
+                  onDelete: () => onSolicitarExclusao(unidade.id),
+                }}
+              />
             ))}
           </div>
         )}
 
         <Dialog
           open={criando}
-          onClose={() => setCriando(false)}
+          onClose={onFecharCriacao}
           title="Nova Unidade"
           actions={
-            <>
-              <Button variant="transparent" onClick={() => setCriando(false)} className="mr-2">
+            <div className="flex w-full items-center justify-between">
+              <Button variant="ghost" onClick={onFecharCriacao}>
                 Cancelar
               </Button>
-              <Button onClick={handleSalvar} icon="check">
-                Salvar Unidade
+              <Button onClick={onSalvarNovaUnidade}>
+                Confirmar
               </Button>
-            </>
+            </div>
           }
         >
           <Input
             label="Nome da Unidade"
             value={nome}
-            onChange={(e) => setNome(e.target.value)}
+            onChange={(e) => onChangeNome(e.target.value)}
           />
-          <Textarea
-            label="Descrição (opcional)"
+          <Input
+            label="Descrição (Opcional)"
             value={descricao}
-            onChange={(e) => setDescricao(e.target.value)}
-            rows={2}
+            onChange={(e) => onChangeDescricao(e.target.value)}
           />
         </Dialog>
       </Card>
+
+      <ConfirmDialog
+        open={confirmandoIA}
+        title="Você deseja gerar as unidades desta disciplina com IA?"
+        description="Vamos usar IA para sugerir unidades com base na BNCC. Deseja continuar?"
+        confirmLabel="Confirmar"
+        onConfirm={onConfirmarSugestoes}
+        onCancel={onCancelarSugestoes}
+      />
+
+      <ConfirmDialog
+        open={!!unidadeParaExcluir}
+        title="Remover unidade?"
+        description="Esta unidade e seus materiais serão removidos."
+        confirmLabel="Remover"
+        onConfirm={onConfirmarExclusao}
+        onCancel={onCancelarExclusao}
+      />
     </main>
   );
 }

@@ -62,12 +62,13 @@ async def generate_activity(request: ActivityRequest):
             "1. ADEQUAÇÃO AO NÍVEL: A linguagem e a dificuldade devem ser ACESSÍVEIS para a série solicitada. Evite termos acadêmicos ou questões complexas demais.\n"
             "2. FOCO NA DISCIPLINA: A atividade deve ser sobre a matéria solicitada. Se for Matemática, foque em Matemática. Se for História, foque em História. NÃO force temas de tecnologia se não fizer sentido.\n"
             "3. SEM ALUCINAÇÕES: Não invente nomes de empresas, escolas ou softwares fictícios (ex: 'Escola ConectaTech', 'App MathLife'). Use contextos reais ou genéricos.\n"
-            "4. COERÊNCIA TEXTUAL: Se uma questão citar 'segundo o texto', certifique-se de que a resposta esteja EXPLICITAMENTE no 'Texto de Apoio' (campo content) gerado acima. Se necessário, inclua o trecho relevante no próprio enunciado da questão.\n"
-            "5. BNCC E CIEB COMO BASE: Use o contexto abaixo (que pode conter normas da BNCC e exemplos do CIEB) para alinhar as habilidades e inspirar as questões.\n\n"
+            "4. TEXTO DE APOIO OPCIONAL: Se ALGUMA questão usar a expressão 'Segundo o texto' (ou variações de maiúsculas/minúsculas), você DEVE preencher o campo 'content' com um texto curto de apoio (máx. 2 parágrafos). Esse texto será exibido ANTES das questões e deve conter, de forma explícita, as informações necessárias para responder às perguntas que começam com 'Segundo o texto'.\n"
+            "5. Se NENHUMA questão usar a expressão 'Segundo o texto', o campo 'content' deve ser uma string vazia (\"\") e as questões não podem depender de um texto de apoio externo.\n"
+            "6. BNCC E CIEB COMO BASE: Use o contexto abaixo (que pode conter normas da BNCC e exemplos do CIEB) para alinhar as habilidades e inspirar as questões.\n\n"
             "Contexto (BNCC/CIEB):\n"
             f"{context_text}\n\n"
             "Estrutura da Atividade:\n"
-            "1. Texto de Apoio: Curto, direto e fácil de ler (máx. 2 parágrafos).\n"
+            "1. Texto de Apoio (campo 'content'): Curto, direto e fácil de ler (máx. 2 parágrafos). Só deve ser preenchido se houver questões com 'Segundo o texto'.\n"
             "2. Questões: 5 questões de múltipla escolha. Devem ser claras e objetivas.\n"
             "3. Alternativas: Simples e diretas.\n\n"
             "A saída deve ser EXATAMENTE um JSON válido com a seguinte estrutura:\n"
@@ -77,10 +78,10 @@ async def generate_activity(request: ActivityRequest):
             '  "bncc_skills": [\n'
             '    "Código(s) e descrição(ões) da(s) habilidade(s) da BNCC usadas"\n'
             "  ],\n"
-            '  "content": "Um texto de apoio curto e direto (máx. 2 parágrafos).",\n'
+            '  "content": "Um texto de apoio curto e direto OU string vazia se nenhuma questão usar \\"Segundo o texto\\".",\n'
             '  "questions": [\n'
             "    {\n"
-            '      "enunciado": "Enunciado da questão 1",\n'
+            '      "enunciado": "Enunciado da questão 1 (pode começar com \\"Segundo o texto\\" se fizer sentido)",\n'
             '      "alternativas": [\n'
             '        "A) alternativa A",\n'
             '        "B) alternativa B",\n'
