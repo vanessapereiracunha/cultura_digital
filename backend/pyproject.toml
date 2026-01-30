@@ -1,3 +1,30 @@
+[project]
+name = "cultura-digital-backend"
+version = "0.1.0"
+description = "FastAPI backend for Cultura Digital"
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "fastapi==0.109.1",
+    "uvicorn[standard]==0.23.2",
+    "python-dotenv==1.0.0",
+    "aiostream==0.5.2",
+    "llama-index==0.14.12",
+    "llama-index-llms-openai==0.6.13",
+    "llama-index-embeddings-openai==0.5.1",
+    "llama-index-llms-openai-like==0.5.3",
+    "llama-index-llms-gemini==0.6.1",
+    "llama-index-embeddings-huggingface==0.6.1",
+    "llama-parse==0.5.20",
+    "llama-cloud==0.1.35",
+    "cachetools==5.3.3",
+    "docx2txt==0.8",
+    "fpdf2==2.8.5",
+    "python-docx==1.2.0",
+    "google-generativeai==0.8.6",
+    "sentence-transformers==3.0.1",
+    "pytest==8.0.0",
+]
+
 [tool]
 [tool.poetry]
 name = "app"
