@@ -34,9 +34,7 @@ logger = logging.getLogger("uvicorn")
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if environment == "dev" else [
-        "https://hackaton-cultura-digital.vercel.app",
-    ],
+    allow_origin,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
