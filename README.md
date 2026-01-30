@@ -133,7 +133,25 @@ poetry install
 ```
 Configure as variáveis de ambiente:
 - Crie um arquivo `.env` na pasta `backend`.
-- Adicione sua chave da API do Gemini: `GOOGLE_API_KEY=sua_chave_aqui`.
+- Você pode usar o arquivo `.env.example` como base: `cp .env.example .env` (se disponível) ou criar um novo com as seguintes chaves:
+
+```env
+# Provedor e Modelos
+MODEL_PROVIDER=gemini
+MODEL=gemini-1.5-flash
+EMBEDDING_MODEL=text-embedding-004
+EMBEDDING_DIM=768
+
+# Chaves de API
+GOOGLE_API_KEY=sua_chave_gemini_aqui
+PRESENTON_API_KEY=sua_chave_presenton_aqui
+
+# Configurações de Rede
+APP_HOST=0.0.0.0
+APP_PORT=8000
+```
+
+> **Nota:** A `GOOGLE_API_KEY` é necessária para o funcionamento da IA (Gemini) e a `PRESENTON_API_KEY` é necessária para a geração de slides.
 
 Inicialize a base de dados do RAG (necessário apenas na primeira vez ou quando adicionar novos documentos):
 ```bash
