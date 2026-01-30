@@ -42,7 +42,7 @@ export function Dialog({ open, title, children, actions, onClose, className = ""
       onClose={onClose}
     >
       <h5 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">{title}</h5>
-      <div className="space-y-4 text-slate-800 dark:text-slate-100 custom-scroll max-h-[70vh] overflow-y-auto pr-1">
+      <div className="space-y-4 text-slate-800 dark:text-slate-100">
         {children}
       </div>
       {actions && (

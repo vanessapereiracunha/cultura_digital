@@ -7,7 +7,11 @@ export function loadSlides(): Slide[] {
   const stored = localStorage.getItem(SLIDES_STORAGE_KEY);
   if (!stored) return [];
   try {
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored) as Slide[];
+    return parsed.map((s) => ({
+      status: "andamento",
+      ...s,
+    }));
   } catch (error) {
     console.error("Erro ao carregar slides:", error);
     return [];

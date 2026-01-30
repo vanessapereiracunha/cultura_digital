@@ -14,7 +14,12 @@ export function loadUnidades(): Unidade[] {
   }
 
   try {
-    return JSON.parse(raw) as Unidade[];
+    const parsed = JSON.parse(raw) as Unidade[];
+    // Backward compatibility: ensure status exists
+    return parsed.map((item) => ({
+      status: "pendente",
+      ...item,
+    }));
   } catch {
     return [];
   }

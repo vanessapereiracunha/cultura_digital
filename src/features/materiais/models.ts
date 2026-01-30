@@ -32,6 +32,7 @@ export type PlanoDeAula = {
   downloadUrl?: string;
   filename?: string;
   dataGeracao: string;
+  status?: "pendente" | "andamento" | "concluida";
 };
 
 export type AtividadeAvaliativa = {
@@ -40,6 +41,7 @@ export type AtividadeAvaliativa = {
   conteudo: ActivityContent;
   downloadUrl: string;
   dataGeracao: string;
+  status?: "pendente" | "andamento" | "concluida";
 };
 
 export type Slide = {
@@ -50,6 +52,7 @@ export type Slide = {
   edit_url?: string;
   presentation_id?: string;
   dataGeracao: string;
+  status?: "pendente" | "andamento" | "concluida";
 };
 
 export type SlideRequest = {

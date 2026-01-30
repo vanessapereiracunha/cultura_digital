@@ -22,11 +22,14 @@ export default function MateriaisPage({ disciplina, unidade, onVoltar }: Materia
     loadingSlides,
     gerarPlano,
     salvarPlanoEditado,
+    marcarStatusPlano,
     removerPlano,
     gerarAtividade,
     salvarAtividadeEditada,
+    marcarStatusAtividade,
     removerAtividade,
     gerarSlides,
+    marcarStatusSlides,
     removerSlides,
   } = useMateriais({ unidade, disciplina });
 
@@ -44,6 +47,7 @@ export default function MateriaisPage({ disciplina, unidade, onVoltar }: Materia
       planoState={{ plano, loadingPlano, gerarPlano, salvarPlanoEditado, removerPlano }}
       atividadeState={{ atividade, loadingAtividade, gerarAtividade, salvarAtividadeEditada, removerAtividade }}
       slidesState={{ slides, loadingSlides, gerarSlides, removerSlides }}
+      statusHandlers={{ marcarStatusPlano, marcarStatusAtividade, marcarStatusSlides }}
     />
   );
 }
@@ -73,6 +77,11 @@ type MateriaisViewProps = {
     gerarSlides: () => void;
     removerSlides: () => void;
   };
+  statusHandlers: {
+    marcarStatusPlano: (status: "andamento" | "concluida") => void;
+    marcarStatusAtividade: (status: "andamento" | "concluida") => void;
+    marcarStatusSlides: (status: "andamento" | "concluida") => void;
+  };
 };
 
 function MateriaisView({
@@ -83,6 +92,7 @@ function MateriaisView({
   planoState,
   atividadeState,
   slidesState,
+  statusHandlers,
 }: MateriaisViewProps) {
   return (
     <main className="space-y-8">
@@ -108,6 +118,7 @@ function MateriaisView({
             onGenerate={planoState.gerarPlano}
             onSave={planoState.salvarPlanoEditado}
             onDelete={planoState.removerPlano}
+            onStatusChange={statusHandlers.marcarStatusPlano}
           />
         </div>
 
@@ -119,6 +130,7 @@ function MateriaisView({
             onGenerate={atividadeState.gerarAtividade}
             onSave={atividadeState.salvarAtividadeEditada}
             onDelete={atividadeState.removerAtividade}
+            onStatusChange={statusHandlers.marcarStatusAtividade}
           />
         </div>
 
@@ -129,6 +141,7 @@ function MateriaisView({
             loading={slidesState.loadingSlides}
             onGenerate={slidesState.gerarSlides}
             onDelete={slidesState.removerSlides}
+            onStatusChange={statusHandlers.marcarStatusSlides}
           />
         </div>
       </div>

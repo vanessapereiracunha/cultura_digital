@@ -17,5 +17,5 @@
     "allowJs": false,
     "types": ["react", "react-dom", "jest", "node"]
   },
-  "include": ["src", "src/__tests__"]
+  "include": ["src", "src/test"]
 }

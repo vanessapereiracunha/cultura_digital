@@ -8,7 +8,11 @@ export function loadPlanos(): PlanoDeAula[] {
   const stored = localStorage.getItem(PLANOS_STORAGE_KEY);
   if (!stored) return [];
   try {
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored) as PlanoDeAula[];
+    return parsed.map((p) => ({
+      status: "andamento",
+      ...p,
+    }));
   } catch (error) {
     console.error("Erro ao carregar planos de aula:", error);
     return [];
@@ -25,7 +29,11 @@ export function loadAtividades(): AtividadeAvaliativa[] {
   const stored = localStorage.getItem(ATIVIDADES_STORAGE_KEY);
   if (!stored) return [];
   try {
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored) as AtividadeAvaliativa[];
+    return parsed.map((a) => ({
+      status: "andamento",
+      ...a,
+    }));
   } catch (error) {
     console.error("Erro ao carregar atividades:", error);
     return [];

@@ -10,6 +10,7 @@ import { EmptyState } from "../../shared/components/EmptyState";
 import { UnidadeCard } from "./components/UnidadeCard";
 import { Sparkles, Plus } from "lucide-react";
 import { ConfirmDialog } from "../../shared/components/ConfirmDialog";
+import { buscarPlanoDaUnidade, buscarAtividadeDaUnidade, buscarSlidesDaUnidade } from "../materiais/services";
 
 type UnidadesPageProps = {
   disciplina: { id: string; nome: string; serieAno: string };
@@ -77,6 +78,15 @@ export default function UnidadesPage({ disciplina, onVoltar, onSelecionarUnidade
         await sugerirUnidades();
       }}
       onCancelarSugestoes={() => setConfirmarIA(false)}
+      computeStatus={(unidadeId) => {
+        const plano = buscarPlanoDaUnidade(unidadeId);
+        const atividade = buscarAtividadeDaUnidade(unidadeId);
+        const slides = buscarSlidesDaUnidade(unidadeId);
+        const items = [plano, atividade, slides].filter(Boolean) as { status?: string }[];
+        if (items.length === 0) return "pendente";
+        if (items.every((i) => i.status === "concluida")) return "concluida";
+        return "andamento";
+      }}
     />
   );
 }
@@ -104,6 +114,7 @@ type UnidadesViewProps = {
   onSolicitarSugestoes: () => void;
   onConfirmarSugestoes: () => void;
   onCancelarSugestoes: () => void;
+  computeStatus: (unidadeId: string) => "pendente" | "andamento" | "concluida";
 };
 
 function UnidadesView({
@@ -129,6 +140,7 @@ function UnidadesView({
   onSolicitarSugestoes,
   onConfirmarSugestoes,
   onCancelarSugestoes,
+  computeStatus,
 }: UnidadesViewProps) {
   return (
     <main className="space-y-8">
@@ -177,6 +189,7 @@ function UnidadesView({
               <UnidadeCard 
                 key={unidade.id}
                 unidade={unidade}
+                status={computeStatus(unidade.id)}
                 actions={{
                   onSelect: () => onSelecionarUnidade(unidade),
                   onDelete: () => onSolicitarExclusao(unidade.id),

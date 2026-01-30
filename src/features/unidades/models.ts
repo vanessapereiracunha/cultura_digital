@@ -1,4 +1,5 @@
 export type OrigemUnidade = "manual" | "ia";
+export type UnidadeStatus = "pendente" | "andamento" | "concluida";
 
 export type Material = {
   id: string;
@@ -14,4 +15,5 @@ export type Unidade = {
   descricao?: string;
   materiais: Material[];
   origem?: OrigemUnidade;
+  status?: UnidadeStatus;
 };

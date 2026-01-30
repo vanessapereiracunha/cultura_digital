@@ -15,6 +15,7 @@ export async function gerarSlides(request: SlideRequest, unidadeId: string): Pro
     edit_url: response.edit_url || response.url, // Fallback
     presentation_id: response.presentation_id,
     dataGeracao: new Date().toISOString(),
+    status: "andamento",
   };
 }
 
@@ -64,6 +65,7 @@ export async function gerarAtividade(
     conteudo: response.content || {},
     downloadUrl: response.download_url,
     dataGeracao: new Date().toISOString(),
+    status: "andamento",
   };
 }
 
@@ -77,4 +79,22 @@ export function salvarAtividade(atividade: AtividadeAvaliativa): void {
 
 export function removerAtividade(id: string): void {
   atividadeRepository.remove(id);
+}
+
+export function atualizarStatusPlano(unidadeId: string, status: "andamento" | "concluida") {
+  const atual = buscarPlanoDaUnidade(unidadeId);
+  if (!atual) return;
+  planoRepository.upsert({ ...atual, status });
+}
+
+export function atualizarStatusAtividade(unidadeId: string, status: "andamento" | "concluida") {
+  const atual = buscarAtividadeDaUnidade(unidadeId);
+  if (!atual) return;
+  atividadeRepository.upsert({ ...atual, status });
+}
+
+export function atualizarStatusSlides(unidadeId: string, status: "andamento" | "concluida") {
+  const atual = buscarSlidesDaUnidade(unidadeId);
+  if (!atual) return;
+  slidesRepository.upsert({ ...atual, status });
 }

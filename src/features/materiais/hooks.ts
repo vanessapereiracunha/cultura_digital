@@ -21,6 +21,9 @@ import {
   buscarSlidesDaUnidade,
   salvarSlides,
   removerSlides,
+  atualizarStatusPlano,
+  atualizarStatusAtividade,
+  atualizarStatusSlides,
 } from "./services";
 
 type MateriaisArgs = {
@@ -72,6 +75,7 @@ export function useMateriais({ unidade, disciplina }: MateriaisArgs) {
         downloadUrl: (response as any).downloadUrl,
         filename: (response as any).filename,
         dataGeracao: new Date().toISOString(),
+        status: "andamento",
       };
       salvarPlano(novoPlano);
       setPlano(novoPlano);
@@ -99,6 +103,12 @@ export function useMateriais({ unidade, disciplina }: MateriaisArgs) {
       setPlano(null);
     }
   }, [plano]);
+
+  const marcarStatusPlano = useCallback((status: "andamento" | "concluida") => {
+    if (!unidade || !plano) return;
+    atualizarStatusPlano(unidade.id, status);
+    setPlano({ ...plano, status });
+  }, [plano, unidade]);
 
   const gerarAtividadeAtual = useCallback(async () => {
     if (!unidade || !disciplina) return;
@@ -140,6 +150,12 @@ export function useMateriais({ unidade, disciplina }: MateriaisArgs) {
     }
   }, [atividade]);
 
+  const marcarStatusAtividade = useCallback((status: "andamento" | "concluida") => {
+    if (!unidade || !atividade) return;
+    atualizarStatusAtividade(unidade.id, status);
+    setAtividade({ ...atividade, status });
+  }, [atividade, unidade]);
+
   const gerarSlidesAtuais = useCallback(async () => {
     if (!unidade || !disciplina) return;
     setLoading((s) => ({ ...s, slides: true }));
@@ -169,6 +185,12 @@ export function useMateriais({ unidade, disciplina }: MateriaisArgs) {
     }
   }, [slides]);
 
+  const marcarStatusSlides = useCallback((status: "andamento" | "concluida") => {
+    if (!unidade || !slides) return;
+    atualizarStatusSlides(unidade.id, status);
+    setSlides({ ...slides, status });
+  }, [slides, unidade]);
+
   return {
     plano,
     atividade,
@@ -180,11 +202,14 @@ export function useMateriais({ unidade, disciplina }: MateriaisArgs) {
     reload: loadAll,
     gerarPlano,
     salvarPlanoEditado,
+    marcarStatusPlano,
     removerPlano: removerPlanoAtual,
     gerarAtividade: gerarAtividadeAtual,
     salvarAtividadeEditada,
+    marcarStatusAtividade,
     removerAtividade: removerAtividadeAtual,
     gerarSlides: gerarSlidesAtuais,
+    marcarStatusSlides,
     removerSlides: removerSlidesAtuais,
   };
 }

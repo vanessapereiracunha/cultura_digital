@@ -1,6 +1,7 @@
 import type { Unidade } from "./models";
 import { unidadeRepository } from "../../core/repositories/unidades";
 import { suggestUnits } from "../rag/usecases";
+import type { UnidadeStatus } from "./models";
 
 export type UnitSuggestionRequest = {
   disciplina: string;
@@ -41,4 +42,10 @@ export function salvarUnidade(unidade: Unidade): void {
 
 export function removerUnidade(id: string): void {
   unidadeRepository.remove(id);
+}
+
+export function atualizarStatusUnidade(id: string, status: UnidadeStatus): void {
+  const unidade = unidadeRepository.get(id);
+  if (!unidade) return;
+  unidadeRepository.upsert({ ...unidade, status });
 }

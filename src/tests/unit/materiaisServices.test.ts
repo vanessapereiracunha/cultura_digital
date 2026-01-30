@@ -34,6 +34,7 @@ describe('Materiais Services', () => {
       pdf_url: 'http://test.com/slides.pdf',
       edit_url: undefined,
       presentation_id: 'pres-123',
+      status: 'andamento',
       dataGeracao: expect.any(String),
     });
     expect(generateSlides).toHaveBeenCalledWith(mockRequest);

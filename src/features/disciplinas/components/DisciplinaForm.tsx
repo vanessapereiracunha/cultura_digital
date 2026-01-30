@@ -33,10 +33,7 @@ export function DisciplinaForm({ initialValues, onSubmit, onCancel }: Disciplina
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 custom-scroll max-h-[70vh] overflow-y-auto pr-1"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4">
       <Select
         label="Ano letivo"
         value={serieAno}
