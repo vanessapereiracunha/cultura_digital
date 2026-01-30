@@ -31,16 +31,16 @@ init_settings()
 environment = os.getenv("ENVIRONMENT", "dev")  # Default to 'development' if not set
 logger = logging.getLogger("uvicorn")
 
-if environment == "dev":
-    logger.warning("Running in development mode - allowing CORS for all origins")
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"] if environment == "dev" else [
+        "https://hackaton-cultura-digital.vercel.app",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def mount_static_files(directory, path):
