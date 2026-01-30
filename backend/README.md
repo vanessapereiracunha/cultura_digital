@@ -52,11 +52,20 @@ You can start editing the API endpoints by modifying `app/api/routers/chat.py`. 
 
 Open [http://localhost:8000/docs](http://localhost:8000/docs) with your browser to see the Swagger UI of the API.
 
-The API allows CORS for all origins to simplify development. You can change this behavior by setting the `ENVIRONMENT` environment variable to `prod`:
+## Testing
 
-```
-ENVIRONMENT=prod python main.py
-```
+The project uses `pytest` for testing.
+
+- **Run all tests:**
+  ```bash
+  poetry run pytest
+  ```
+- **Run tests in verbose mode:**
+  ```bash
+  poetry run pytest -v
+  ```
+
+Tests are located in the `tests/` directory.
 
 ## Using Docker
 
