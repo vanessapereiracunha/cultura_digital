@@ -127,7 +127,7 @@ export function AtividadeCard({
               onClick={() => onStatusChange("concluida")}
               className={
                 atividade.status === "concluida"
-                  ? "border-transparent bg-emerald-500 text-white shadow-sm hover:bg-emerald-400 dark:bg-emerald-400 dark:hover:bg-emerald-300"
+                  ? "border-transparent bg-emerald-500 text-white shadow-sm hover:bg-emerald-400 ring-2 ring-emerald-200 dark:bg-emerald-400 dark:hover:bg-emerald-300 dark:ring-emerald-300/40"
                   : "border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/5"
               }
             >
@@ -139,7 +139,7 @@ export function AtividadeCard({
               onClick={() => onStatusChange("andamento")}
               className={
                 atividade.status === "andamento" || !atividade.status
-                  ? "border-transparent bg-orange-500 text-white shadow-sm hover:bg-orange-400 dark:bg-orange-400 dark:hover:bg-orange-300"
+                  ? "border-transparent bg-orange-500 text-white shadow-sm hover:bg-orange-400 ring-2 ring-orange-200 dark:bg-orange-400 dark:hover:bg-orange-300 dark:ring-orange-300/40"
                   : "border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/5"
               }
             >

@@ -9,8 +9,8 @@ export function loadSlides(): Slide[] {
   try {
     const parsed = JSON.parse(stored) as Slide[];
     return parsed.map((s) => ({
-      status: "andamento",
       ...s,
+      status: s.status ?? "andamento",
     }));
   } catch (error) {
     console.error("Erro ao carregar slides:", error);

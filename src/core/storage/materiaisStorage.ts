@@ -10,8 +10,8 @@ export function loadPlanos(): PlanoDeAula[] {
   try {
     const parsed = JSON.parse(stored) as PlanoDeAula[];
     return parsed.map((p) => ({
-      status: "andamento",
       ...p,
+      status: p.status ?? "andamento",
     }));
   } catch (error) {
     console.error("Erro ao carregar planos de aula:", error);
@@ -31,8 +31,8 @@ export function loadAtividades(): AtividadeAvaliativa[] {
   try {
     const parsed = JSON.parse(stored) as AtividadeAvaliativa[];
     return parsed.map((a) => ({
-      status: "andamento",
       ...a,
+      status: a.status ?? "andamento",
     }));
   } catch (error) {
     console.error("Erro ao carregar atividades:", error);
