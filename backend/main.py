@@ -20,6 +20,12 @@ from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
+origins = [
+    "https://cultura-digital-puce.vercel.app",  # frontend na nuvem
+    "http://localhost:5173"                     # front local
+]
+
+
 init_settings()
 
 environment = os.getenv("ENVIRONMENT", "dev")  # Default to 'development' if not set
