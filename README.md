@@ -88,6 +88,140 @@ Principais arquivos de documentação deste projeto:
 
 ---
 
+## Tecnologias e Arquitetura
+
+O projeto utiliza uma arquitetura moderna e modular, dividida entre Frontend e Backend:
+
+### **Frontend**
+Desenvolvido com **React (Vite)** e **TypeScript**, seguindo uma organização **Feature-Based**:
+- **Features (`src/features`)**: Código organizado por domínios de negócio (Disciplinas, Unidades, Materiais). Cada feature encapsula seus próprios componentes, hooks e serviços.
+- **Core (`src/core`)**: Camada de infraestrutura que gerencia a comunicação HTTP e a persistência de dados local (Repositories).
+- **Shared (`src/shared`)**: Componentes de interface (UI) e utilitários reutilizáveis em toda a aplicação.
+- **Tailwind CSS**: Utilizado para uma estilização rápida e responsiva.
+
+### **Backend**
+Construído com **FastAPI (Python)**, estruturado em camadas de responsabilidade:
+- **API (Routers)**: Endpoints que expõem as funcionalidades para o frontend.
+- **Services**: Lógica de negócio e geradores de arquivos (PDF/DOCX).
+- **Engine (RAG)**: O núcleo de inteligência que utiliza **LlamaIndex** para:
+    - **Indexação**: Processamento e vetorização dos documentos oficiais.
+    - **Recuperação Contextual**: Busca inteligente baseada em semântica e filtros de metadados.
+    - **Integração com LLM**: Orquestração das chamadas ao modelo Gemini (Google).
+
+---
+
+## Como Rodar o Projeto
+
+### 1. Clonar o Repositório
+Primeiro, clone o repositório para sua máquina local:
+```bash
+git clone https://github.com/seu-usuario/cultura_digital.git
+cd cultura_digital
+```
+
+### 2. Pré-requisitos
+Certifique-se de ter instalado:
+- Python 3.11 ou superior.
+- Node.js (v18+) e npm.
+- [Poetry](https://python-poetry.org/) para gerenciamento de dependências Python.
+
+### 3. Configuração do Backend
+Navegue até a pasta do backend e instale as dependências:
+```bash
+cd backend
+poetry install
+```
+Configure as variáveis de ambiente:
+- Crie um arquivo `.env` na pasta `backend`.
+- Adicione sua chave da API do Gemini: `GOOGLE_API_KEY=sua_chave_aqui`.
+
+Inicialize a base de dados do RAG (necessário apenas na primeira vez ou quando adicionar novos documentos):
+```bash
+poetry run generate
+```
+
+Inicie o servidor backend:
+```bash
+poetry run python main.py
+```
+O backend rodará em `http://localhost:8000`.
+
+### 4. Configuração do Frontend
+Em um novo terminal, na raiz do projeto, instale as dependências e inicie o site:
+```bash
+npm install
+npm run dev
+```
+O frontend estará disponível em `http://localhost:5173`.
+
+---
+
+## Como Testar o Projeto
+
+O projeto possui uma suíte de testes automatizados organizada para garantir a qualidade e estabilidade das funcionalidades, seguindo os conceitos de testes unitários e de integração.
+
+### **1. Frontend (Testes Unitários)**
+Os testes do frontend estão localizados em `src/__tests__` e são focados em validar a lógica de negócio e serviços de forma isolada usando **Jest**.
+
+- **Rodar todos os testes:**
+  ```bash
+  npm test
+  ```
+- **Rodar testes em modo detalhado:**
+  ```bash
+  npm run test:verbose
+  ```
+
+### **2. Backend (Unitários e Integração)**
+O backend utiliza **Pytest** e está organizado em duas categorias principais na pasta `backend/tests`:
+
+- **Testes Unitários (`tests/unit`):** Validam funções puras e serviços isolados, como os geradores de arquivos PDF/DOCX.
+- **Testes de Integração (`tests/integration`):** Validam a comunicação entre componentes, como os endpoints da API (FastAPI) e o motor de busca semântica (RAG).
+
+**Comandos para o Backend:**
+1.  Navegue até a pasta do backend:
+    ```bash
+    cd backend
+    ```
+2.  **Rodar todos os testes:**
+    ```bash
+    poetry run pytest
+    ```
+3.  **Rodar testes em modo detalhado:**
+    ```bash
+    poetry run pytest -v
+    ```
+
+**Observação:** Ambos os ambientes utilizam **dados mockados** (localizados nas pastas `mocks/`) para garantir que os testes sejam rápidos, reprodutíveis e não dependam de conexões externas ou custos de API durante o desenvolvimento.
+
+---
+
+## Implementação do RAG com Filtros
+
+A solução utiliza **RAG (Retrieval-Augmented Generation)** para garantir que o material gerado pela IA seja fiel aos documentos oficiais. Um diferencial importante é o uso de **filtros por metadados** durante a recuperação:
+
+- **Categorização Automática**: Ao processar os documentos (BNCC, CIEB, Leis), o sistema atribui metadados como `category` (`normativa`, `apoio`, `legal`, `pedagogica`).
+- **Recuperação Contextual**:
+  - Para **Planos de Aula**, o sistema filtra documentos das categorias `normativa` e `apoio` para garantir alinhamento curricular.
+  - Para **Sugestões de Unidades**, o foco é em documentos `normativa` (BNCC).
+  - Para **Atividades**, busca-se exemplos práticos em documentos de `apoio`.
+
+Isso evita "alucinações" da IA e garante que a fundamentação legal e pedagógica citada nos planos de aula seja real e precisa.
+
+---
+
+## Documentos de Referência (Base do RAG)
+
+Para garantir o alinhamento pedagógico e normativo, o sistema utiliza os seguintes documentos oficiais como base de conhecimento:
+
+- **BNCC (Base Nacional Comum Curricular)**: Documento normativo que define o conjunto orgânico e progressivo de aprendizagens essenciais.
+- **Currículo de Referência CIEB**: Referencial para o ensino de tecnologia e computação na Educação Básica.
+- **Lei nº 14.533/2023**: Institui a Política Nacional de Educação Digital (PNED).
+- **Resolução CNE/CEB nº 1/2022**: Institui as Normas sobre Computação na Educação Básica.
+- **Parecer CNE/CEB nº 2/2022**: Fundamentação técnica e pedagógica para a inclusão da Computação no currículo.
+
+---
+
 ## Participantes
 
 Este projeto está sendo desenvolvido pelos estudantes:
