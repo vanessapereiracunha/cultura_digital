@@ -115,7 +115,7 @@ Construído com **FastAPI (Python)**, estruturado em camadas de responsabilidade
 ### 1. Clonar o Repositório
 Primeiro, clone o repositório para sua máquina local:
 ```bash
-git clone https://github.com/seu-usuario/cultura_digital.git
+git clone (https://github.com/watusalen/cultura_digital.git)
 cd cultura_digital
 ```
 
